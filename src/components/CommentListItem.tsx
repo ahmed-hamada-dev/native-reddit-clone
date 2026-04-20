@@ -1,11 +1,11 @@
 import { View, Text, Image, Pressable, FlatList } from "react-native";
 import { Entypo, Octicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { formatDistanceToNowStrict } from "date-fns";
-import { Comment } from "../lib/uiTypes";
 import { useState, memo } from "react";
+import { Tables } from "../lib/supabase.types";
 
 type CommentListItemProps = {
-  comment: Comment;
+  comment: Tables<"comments">;
   depth: number;
   handleRepliedButtonPress: (commentId: string) => void;
 };
@@ -89,7 +89,7 @@ const CommentListItem = ({
         </View>
       </View>
       {/* Show replies button */}
-      {comment.replies.length > 0 && !isShowReplies && depth < 5 ? (
+      {comment.comment.length > 0 && !isShowReplies && depth < 5 ? (
         <Pressable
           onPress={() => setIsShowReplies(true)}
           style={{

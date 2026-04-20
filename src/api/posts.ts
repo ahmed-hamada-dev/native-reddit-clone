@@ -35,7 +35,7 @@ const fetchPostById = async (id: string) => {
   const { data, error } = await supabase
     .from("posts")
     .select(
-      "*, group:groups(*), user:users!posts_user_id_fkey(*), upvotes(value.sum()) "
+      "*, group:groups(*), user:users!posts_user_id_fkey(*), upvotes(value.sum()), comments(*, user:users(*, replies:comments(*))) "
     )
     .eq("id", id)
     .single();

@@ -7,3 +7,7 @@ export type PostWithGroupAndUser = Tables<"posts"> & {
 };
 
 export type Group = Tables<"groups">;
+
+export type Comments = Tables<"comments"> & {
+  user: Tables<"users">;
+};

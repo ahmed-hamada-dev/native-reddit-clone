@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import {
   Alert,
@@ -10,11 +10,12 @@ import {
 } from "react-native";
 import { Entypo, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { ActivityIndicator, Text, View } from "react-native";
-import PostListItem from "../../../components/PostListItem";
-import { useDeletePost, useGetPostById } from "../../../api/posts";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Toast } from "react-native-toast-notifications";
 import { useQueryClient } from "@tanstack/react-query";
+
+import PostListItem from "../../../components/PostListItem";
+import { useDeletePost, useGetPostById } from "../../../api/posts";
 import { useAuth } from "../../../providers/AuthProvider";
 import comments from "../../../../assets/data/comments.json";
 import CommentListItem from "../../../components/CommentListItem";
@@ -26,6 +27,7 @@ function PostPage() {
   const { data: post, error, isLoading } = useGetPostById(id);
   const { mutate, isPending } = useDeletePost();
   const { session } = useAuth();
+
   const userId = session?.user.id;
   const queryClient = useQueryClient();
   const insets = useSafeAreaInsets();
@@ -35,6 +37,8 @@ function PostPage() {
   const postComments = comments.filter(
     (comment) => comment.post_id === "post-1"
   );
+
+  console.log(JSON.stringify(post, null, 2));
   const handelRemovePost = async () => {
     mutate(post.id, {
       onSuccess: () => {
@@ -67,10 +71,6 @@ function PostPage() {
     );
   };
 
-  // const handleRepliedButtonPress = useCallback((commentId: string) => {
-  //   console.log(commentId);
-  //   inputRef.current?.focus();
-  // }, []);
   const handleRepliedButtonPress = (commentId: String) => {
     console.log(commentId);
     inputRef.current?.focus();
@@ -107,7 +107,7 @@ function PostPage() {
       <FlatList
         keyExtractor={(item) => item.id}
         ListHeaderComponent={<PostListItem post={post} isDetailedPost />}
-        data={postComments}
+        data={post.comments}
         renderItem={({ item }) => (
           <CommentListItem
             comment={item}
